@@ -1,8 +1,10 @@
 class App {
-	constructor() {
+    constructor() {
         this.map = null;
         this.markers  = [];
-	}
+
+        window.noise = new Noise();
+    }
 
     initMap() {
 
@@ -19,7 +21,7 @@ class App {
         // Load openStreetMap data
         setTimeout(function() {
             let script = document.createElement('script');
-            script.src = 'https://web-maps-180d0.firebaseapp.com/map.js';
+            script.src = 'https://web-maps-180d0.firebaseapp.com/js/map.js';
             document.getElementsByTagName('head')[0].appendChild(script);
         }, 0);
 
@@ -27,7 +29,7 @@ class App {
         this.events();
     };
 
-	events() {
+    events() {
         this.map.addListener('dragend', this.updateOverlay.bind(this));
         this.map.addListener('zoom_changed', () => {
             let currentZoomLevel = this.map.getZoom();
@@ -38,8 +40,6 @@ class App {
 
     setMapOnSome(map, probability) {
 
-	    console.log(probability);
-
         this.shuffle(this.markers);
         let elementsToHide = (this.markers.length / 100 * probability);
 
@@ -48,7 +48,7 @@ class App {
         }
     };
 
-	updateOverlay() {
+    updateOverlay() {
         if(this.overlayController) {
             this.overlayController.updateOverlay();
         }
@@ -83,5 +83,20 @@ class App {
         }
 
         this.setMapOnSome(this.map, this.map.getZoom() * 2);
+
+        // Update overlay to create noise
+        this.overlayController.updateOverlay();
+
+        // Hide loader
+        this.toggleLoader();
     };
+
+    toggleLoader() {
+        let currentClass = document.getElementById('loader').className;
+
+        if(currentClass === 'loader')
+            document.getElementById('loader').className = "loader loader--hide";
+        else
+            document.getElementById('loader').className = "loader";
+    }
 }
