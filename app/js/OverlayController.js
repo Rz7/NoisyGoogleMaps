@@ -60,12 +60,15 @@ class OverlayController {
             let tileCoordinateNw = this.pointToTile(boundsNwLatLng, zoom);
             let tileCoordinateSe = this.pointToTile(boundsSeLatLng, zoom);
 
-            let tileColumns = tileCoordinateSe.x - tileCoordinateNw.x + 1;
-            let tileRows = tileCoordinateSe.y - tileCoordinateNw.y + 1;
+            let tileColumns = Math.abs(tileCoordinateSe.x - tileCoordinateNw.x) + 1;
+            let tileRows = Math.abs(tileCoordinateSe.y - tileCoordinateNw.y) + 1;
 
             let zfactor = Math.pow(2, zoom),
                 minX = tileCoordinateNw.x,
                 minY = tileCoordinateNw.y;
+
+            if(zoom === 3)
+                tileColumns *= 3;
 
         while (tileRows--) {
             while (tileColumns--) {
@@ -76,7 +79,10 @@ class OverlayController {
             }
 
             minY++;
-            tileColumns = tileCoordinateSe.x - tileCoordinateNw.x + 1;
+            tileColumns = Math.abs(tileCoordinateSe.x - tileCoordinateNw.x) + 1;
+
+            if(zoom === 3)
+                tileColumns *= 3;
         }
 
         for(let i in tiles) {
